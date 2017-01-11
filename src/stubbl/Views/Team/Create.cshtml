@@ -1,0 +1,11 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using stubbl.ViewModels
+@model stubbl.ViewModels.CreateTeamViewModel
+<h2>Create a Team</h2>
+
+<form asp-controller="Team" asp-action="Register" method="post">
+    <input asp-for="Name"/>
+    <button type="submit">Create</button>
+</form>
