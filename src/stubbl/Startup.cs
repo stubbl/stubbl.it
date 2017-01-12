@@ -46,7 +46,7 @@ namespace stubbl
             services.AddMemoryCache();
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.CookieName = ".MyApplication";
+                options.CookieName = ".stubbl";
             });
         }
 

@@ -1,28 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace stubbl
 {
     public class StubblClient
     {
-        private string _scheme;
-        private string _stubblApiUrl;
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
         public StubblClient()
         {
-            _scheme = "https://";
-            _stubblApiUrl = "stubbl.api.stubbl.it/";
+            var settings = new StubblClientSettings()
+            {
+                ApiUrl = "stubbl.api.stubbl.it/",
+                Scheme = "https://"
+            };
             _httpClient = new HttpClient()
             {
-                BaseAddress = new Uri($"{_scheme}{_stubblApiUrl}")
+                BaseAddress = new Uri($"{settings.Scheme}{settings.ApiUrl}")
+            }; 
+        }
+
+        public StubblClient(StubblClientSettings settings, HttpClientHandler handler)
+        {
+            _httpClient = new HttpClient(handler)
+            {
+                BaseAddress = settings.Uri
             };
         }
 
@@ -35,5 +40,13 @@ namespace stubbl
         {
             return await _httpClient.PostAsync("http://stubbl.api.stubbl.it/teams", new StringContent(JsonConvert.SerializeObject(new { Name = teamName }), Encoding.UTF8, "application/json"));
         }
+    }
+
+    public class StubblClientSettings
+    {
+        public string Scheme { get; set; }
+        public string ApiUrl { get; set; }
+        public HttpClient HttpClient { get; set; }
+        public Uri Uri => new Uri($"{Scheme}{ApiUrl}");
     }
 }

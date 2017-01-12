@@ -10,7 +10,7 @@ namespace stubbl.Controllers
     {
         public IActionResult Index()
         {
-            return !User.Identity.IsAuthenticated ? View() : (IActionResult)RedirectToAction("Index", "Team"); ;
+            return !User.Identity.IsAuthenticated ? View() : (IActionResult)RedirectToAction("Index", "Stubs"); ;
         }
 
         public IActionResult About()
