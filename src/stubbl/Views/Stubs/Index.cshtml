@@ -1,13 +1,79 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model stubbl.Controllers.StubListViewModel
+﻿@using Microsoft.AspNetCore.Http
+@using stubbl.Components
+@model stubbl.ViewModels.StubListViewModel
 @{
-    <h2>Team</h2>
-    <ul>
-        @foreach (var team in Model.Teams)
-        {
-            <li>@team.Name</li>
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <a href="#menu-toggle" class="btn" id="menu-toggle"><</a>
+            <input placeholder="filter..." />
+            <ul class="sidebar-nav">
+
+                @foreach (var stub in Model.Stubs)
+                {
+                    <li><a asp-controller="Stubs" asp-route-stub="@stub.Id">@stub.Name</a></li>
+                }
+            </ul>
+
+        </div>
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        @await Component.InvokeAsync("EditStub", new { stub = Model.CurrentStub})
+                    </div>
+                    <div class="col-lg-4">
+                        @await Component.InvokeAsync("StubLogs", new { team = Model.CurrentTeam })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section scripts{
+    <script>
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+
+        $('.form-group .btn-add').click(function (event) {
+            $(event.target).closest('.form-group')
+                .before($(`<div class="form-group">
+                                <div class ="row">
+                                    <div class ="col-xs-2 col-sm-1">
+                                        <button type="button" class ="btn btn-danger btn-block btn-remove">-</button>
+                                    </div>
+                                    <div class ="col-xs-10 col-sm-11">
+                                        <div class ="row">
+                                            <div class ="col-sm-6">
+                                                <input class ="form-control request-header-key" placeholder="e.g. key" type="text" id="requestHeader_Key" name="requestHeader.Key">
+                                            </div>
+                                            <div class ="col-sm-6">
+                                                <input class ="form-control request-header-value" placeholder="e.g. value" type="text" id="requestHeader_Value" name="requestHeader.Value">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`));
+        });
+
+        $('.stub-wrapper').on('click', '.key-value-group .btn-remove', function (event) {
+            $(event.target).closest('.form-group').remove();
+        });
+
+        var $logSection = $('.logs-wrapper .logs');
+        if ($logSection) {
+            setInterval(function() {
+                    $.getJSON("http://stubbl.api.stubbl.it/teams/@(Model.CurrentTeam.Id)/logs",
+                        function(res) {
+                            res.logs.forEach(function(log) {
+                                $logSection.prepend($("<li>").text(`${new Date(log.timestamp).toLocaleString()} - ${log.method} - ${log.url} - ${log.body}`));
+                            });
+
+                        });
+                },
+                1000);
         }
-    </ul>
+    </script>
+
 }

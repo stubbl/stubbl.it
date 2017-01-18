@@ -1,0 +1,129 @@
+﻿@model stubbl.ViewModels.Stub
+<div class="stub-wrapper">
+    <form asp-controller="Stubs" asp-action="Edit" method="post" >
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input class="form-control" data-val="true" data-val-required="Please enter a name" id="Name" name="Name" type="text" asp-for="Name">
+        </div>
+        <h2 class="page-header">
+            Request
+        </h2>
+        <div class="form-group">
+            <label for="RequestRelativeUrl">URL (relative)</label>
+            <input class="form-control" data-val="true" data-val-required="Please enter the Request Relative URL" id="RequestRelativeUrl" name="RequestRelativeUrl" placeholder="e.g. /user" type="text" asp-for="Request.Path">
+        </div>
+        <div class="form-group">
+            <label for="RequestMethod">Method</label>
+            <select class="form-control" data-val="true" data-val-required="Please enter the Request Method" id="RequestMethod" name="RequestMethod" asp-for="Request.Method">
+                <option value="GET">GET</option>
+                <option value="PUT">PUT</option>
+                <option value="PATCH">PATCH</option>
+                <option value="POST">POST</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+        <label for="RequestHeaders">Headers</label>        
+        <div class="request-headers key-value-group">
+            @foreach (var requestHeader in Model.Request.Headers)
+            {
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-1">
+                            <button type="button" class="btn btn-danger btn-block btn-remove">-</button>
+                        </div>
+                        <div class="col-xs-10 col-sm-11">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="form-control request-header-key" asp-for="@requestHeader.Key" placeholder="e.g. Accept" type="text">
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control request-header-value" asp-for="@requestHeader.Value" placeholder="e.g. application/json" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group add-button">
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-1">
+                            <button type="button" class="btn btn-success btn-block btn-add">+</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <label for="RequestContentTokens">Content Tokens</label>        
+        <div class="request-content-tokens key-value-group">
+            @foreach (var bodyToken in Model.Request.BodyTokens)
+            {
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-1">
+                            <button type="button" class="btn btn-danger btn-block  btn-remove">-</button>
+                        </div>
+                        <div class="col-xs-10 col-sm-11">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="form-control body-token-key" asp-for="@bodyToken.Path" placeholder="e.g. person.name" type="text">
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control body-token-value" asp-for="@bodyToken.Value" placeholder="e.g. John Smith" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group add-button">
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-1">
+                            <button type="button" class="btn btn-success btn-block btn-add">+</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <h2 class="page-header">
+            Response
+        </h2>
+        <div class="form-group">
+            <label for="ResponseStatusCode">Status Code</label>
+            <input class="form-control" data-val="true" data-val-required="The Status Code field is required." id="ResponseStatusCode" name="ResponseStatusCode" placeholder="e.g. 200" type="text" value="200">
+        </div>
+        <label for="ResponseHeaders">Headers</label>        
+        <div class="response-headers key-value-group">
+            @foreach (var responseHeader in Model.Response.Headers)
+            {
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-1">
+                            <button type="button" class="btn btn-danger btn-block  btn-remove">-</button>
+                        </div>
+                        <div class="col-xs-10 col-sm-11">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="form-control request-header-key" asp-for="@responseHeader.Key" placeholder="e.g. Accept" type="text">
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control request-header-value" asp-for="@responseHeader.Value" placeholder="e.g. application/json" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group add-button">
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-1">
+                            <button type="button" class="btn btn-success btn-block btn-add">+</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            <label for="ResponseContent">Content</label>
+            <textarea class="form-control" id="ResponseContent" name="ResponseContent" placeholder="e.g. { &quot;name&quot;: &quot;Joe Bloggs&quot; }" rows="10" asp-for="Response.Body"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-link" asp-controller="Stubs" asp-action="Index">Cancel</a>
+    </form>
+</div>

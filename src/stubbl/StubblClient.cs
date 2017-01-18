@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +16,8 @@ namespace stubbl
         {
             var settings = new StubblClientSettings()
             {
-                ApiUrl = "stubbl.api.stubbl.it/",
-                Scheme = "https://"
+                ApiUrl = "stubbl.api.stubbl.it",
+                Scheme = "http://"
             };
             _httpClient = new HttpClient()
             {
@@ -33,20 +35,66 @@ namespace stubbl
 
         public async Task<HttpResponseMessage> GetTeams()
         {
-            return await _httpClient.GetAsync("http://stubbl.api.stubbl.it/teams");
+            return await _httpClient.GetAsync("teams");
+        }
+
+        public async Task<HttpResponseMessage> GetStubs()
+        {
+            return await GetStubs(new GetStubsRequest());
+        }
+
+        public async Task<HttpResponseMessage> GetStubs(GetStubsRequest getStubsRequest)
+        {
+            var url = "stubs".AddQueryParameter(  new KeyValuePair<string, string>("teamId", getStubsRequest.TeamId), 
+                                    new KeyValuePair<string, string>("search", getStubsRequest.Search), 
+                                    new KeyValuePair<string, string>("pageNumber", getStubsRequest.PageNumber.ToString()), 
+                                    new KeyValuePair<string, string>("pageSize", getStubsRequest.PageSize.ToString()));
+            return await _httpClient.GetAsync(url);
         }
 
         public async Task<HttpResponseMessage> CreateTeam(string teamName)
         {
-            return await _httpClient.PostAsync("http://stubbl.api.stubbl.it/teams", new StringContent(JsonConvert.SerializeObject(new { Name = teamName }), Encoding.UTF8, "application/json"));
+            return await _httpClient.PostAsync("teams", new StringContent(JsonConvert.SerializeObject(new { Name = teamName }), Encoding.UTF8, "application/json"));
         }
     }
 
-    public class StubblClientSettings
+    public class GetStubsRequest
     {
-        public string Scheme { get; set; }
-        public string ApiUrl { get; set; }
-        public HttpClient HttpClient { get; set; }
-        public Uri Uri => new Uri($"{Scheme}{ApiUrl}");
+        public string TeamId { get; set; }
+        public string Search { get; set; }
+        public int? PageNumber { get; set; }
+        public int? PageSize { get; set; }
+    }
+
+    public static class StringExtensions
+    {
+        public static string AddQueryParameter(this string uri, KeyValuePair<string, string> keyValuePair)
+        {
+            return uri.AddQueryParameter(keyValuePair.Key, keyValuePair.Value);
+        }
+
+        public static string AddQueryParameter(this string uri, string key, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return uri;
+            var pair = $"{key}={value}";
+            if (!uri.Contains("?"))
+            {
+                return $"{uri.ToString().TrimEnd('/')}?{pair}";
+            }
+            else
+            {
+                return $"{uri.ToString().TrimEnd('/')}&{pair}";
+            }
+        }
+
+        public static string AddQueryParameter(this string uri, params KeyValuePair<string,string>[] parameters )
+        {
+            foreach (var keyValuePair in parameters)
+            {
+                uri = uri.AddQueryParameter(keyValuePair);
+            }
+            return uri;
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Stubbl.Controllers
 {
     public class AccountController : Controller
     {
-        public IActionResult Login(string returnUrl = "/Team")
+        public IActionResult Login(string returnUrl = "/Stubs")
         {
             return new ChallengeResult("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
         }

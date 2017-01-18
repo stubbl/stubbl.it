@@ -89,7 +89,7 @@ namespace stubbl
 
                 Events = new OpenIdConnectEvents()
                 {
-                    OnTicketReceived = context =>
+                    OnTicketReceived = async context =>
                     {
                         // Get the ClaimsIdentity
                         var identity = context.Principal.Identity as ClaimsIdentity;
@@ -106,20 +106,22 @@ namespace stubbl
                                 {
                                     // Tokens are stored in a Dictionary with the Key ".Token.<token name>"
                                     string tokenValue = context.Properties.Items[$".Token.{tokenName}"];
-
                                     identity.AddClaim(new Claim(tokenName, tokenValue));
+                                }
+                                if (context.Properties.Items.ContainsKey(".Token.id_token"))
+                                {
+                                    context.HttpContext.Response.Cookies.Append("id-token",context.Properties.Items[".Token.id_token"]);
                                 }
                             }
                             var stubblClient = new StubblClient();
-                            var teamResponse = stubblClient.GetTeams().Result;
+                            var teamResponse = await stubblClient.GetTeams();
 
                             if (teamResponse.IsSuccessStatusCode)
                             {
-                                var teams = JObject.Parse(teamResponse.Content.ReadAsStringAsync().Result);
+                                var teams = JObject.Parse(await teamResponse.Content.ReadAsStringAsync());
                                 context.HttpContext.Session.SetString("CurrentTeam", teams.GetValue("teams").First().Value<string>("id"));
                             }
                         }
-                        return Task.FromResult(0);
                     }
                 }
             };

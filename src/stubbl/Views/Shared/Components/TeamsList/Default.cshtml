@@ -1,0 +1,7 @@
+﻿@model IEnumerable<stubbl.ViewModels.TeamListItem>
+@foreach (var team in Model)
+{
+    <li>
+        <a asp-area="" asp-controller="Stubs" asp-action="Index" asp-route-Team="@team.Id">@team.Name</a>
+    </li>
+}
