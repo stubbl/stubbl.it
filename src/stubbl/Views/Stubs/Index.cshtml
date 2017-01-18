@@ -4,7 +4,7 @@
 @{
     <div id="wrapper">
         <div id="sidebar-wrapper">
-            <a href="#menu-toggle" class="btn menu-toggle"><</a>
+            <a href="#menu-toggle" class="btn menu-toggle"><b>Stubs</b><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
             <input placeholder="filter..." />
             <ul class="sidebar-nav">
                 @foreach (var stub in Model.Stubs)
@@ -15,7 +15,7 @@
 
         </div>
         <div id="sidebar-wrapper-right">
-            <a href="#menu-toggle" class="btn menu-toggle"><</a>
+            <a href="#menu-toggle" class="btn menu-toggle"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span><b>Team Logs</b></a>
             <ul class="sidebar-nav">
                 @await Component.InvokeAsync("StubLogs", new { team = Model.CurrentTeam })
             </ul>
@@ -24,7 +24,7 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-10">
                         @await Component.InvokeAsync("EditStub", new { stub = Model.CurrentStub})
                     </div>
                 </div>

@@ -23,12 +23,24 @@ footer{
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
 }
-
-#wrapper.toggled {
-    padding-left: 250px;
+#sidebar-wrapper-right .menu-toggle {
+    position: fixed;
+    width: 250px;
+    text-align: left;
+}
+#sidebar-wrapper-right .menu-toggle span {
+    padding-right: 15px;
+}
+#sidebar-wrapper .menu-toggle span {
+    padding-left: 15px;
+}
+#sidebar-wrapper .menu-toggle {
+    position: fixed;
+    width: 250px;
+    text-align: right;
 }
 #sidebar-wrapper input {
-    margin: 25px;
+    margin: 35px;
 }
 #sidebar-wrapper-right{
     z-index: 1000;
@@ -36,7 +48,6 @@ footer{
     right: 0px;
     width: 250px;
     height: 100%;
-    margin-left: -250px;
     overflow-y: auto;
     background: #000;
     -webkit-transition: all 0.5s ease;
@@ -47,10 +58,9 @@ footer{
 #sidebar-wrapper {
     z-index: 1000;
     position: fixed;
-    left: 250px;
+    left: 0px;
     width: 40px;
     height: 100%;
-    margin-left: -250px;
     overflow-y: auto;
     background: #000;
     -webkit-transition: all 0.5s ease;
@@ -59,10 +69,10 @@ footer{
     transition: all 0.5s ease;
 }
 #sidebar-wrapper.toggled {
-    width: 40px;
+    left: -210px;
 }
 #sidebar-wrapper-right.toggled {
-    width: 40px;
+    right: -210px;
 }
 
 #page-content-wrapper {
@@ -71,23 +81,21 @@ footer{
     padding: 15px;
 }
 
-.toggled #page-content-wrapper {
-    position: absolute;
-    margin-right: -250px;
-}
-
 /* Sidebar Styles */
 
 .sidebar-nav {
     width: 250px;
     margin: 0;
-    padding: 0;
+    padding: 25px 0 0 0;
     list-style: none;
 }
-
+#sidebar-wrapper-right .sidebar-nav li {
+    padding-left: 40px;
+}
 .sidebar-nav li {
     text-indent: 20px;
     line-height: 40px;
+    padding: 0px;
 }
 
 .sidebar-nav li a {
@@ -124,7 +132,7 @@ footer{
 
 @media(min-width:768px) {
     #wrapper {
-        padding-left: 250px;
+        padding-left: 40px;
     }
 
     #wrapper.toggled {
