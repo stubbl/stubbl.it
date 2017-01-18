@@ -4,14 +4,20 @@
 @{
     <div id="wrapper">
         <div id="sidebar-wrapper">
-            <a href="#menu-toggle" class="btn" id="menu-toggle"><</a>
+            <a href="#menu-toggle" class="btn menu-toggle"><</a>
             <input placeholder="filter..." />
             <ul class="sidebar-nav">
-
                 @foreach (var stub in Model.Stubs)
                 {
                     <li><a asp-controller="Stubs" asp-route-stub="@stub.Id">@stub.Name</a></li>
                 }
+            </ul>
+
+        </div>
+        <div id="sidebar-wrapper-right">
+            <a href="#menu-toggle" class="btn menu-toggle"><</a>
+            <ul class="sidebar-nav">
+                @await Component.InvokeAsync("StubLogs", new { team = Model.CurrentTeam })
             </ul>
 
         </div>
@@ -21,9 +27,6 @@
                     <div class="col-lg-8">
                         @await Component.InvokeAsync("EditStub", new { stub = Model.CurrentStub})
                     </div>
-                    <div class="col-lg-4">
-                        @await Component.InvokeAsync("StubLogs", new { team = Model.CurrentTeam })
-                    </div>
                 </div>
             </div>
         </div>
@@ -31,9 +34,9 @@
 }
 @section scripts{
     <script>
-        $("#menu-toggle").click(function(e) {
+        $(".menu-toggle").click(function(e) {
             e.preventDefault();
-            $("#wrapper").toggleClass("toggled");
+            $(e.target).closest('div').toggleClass("toggled");
         });
 
         $('.form-group .btn-add').click(function (event) {

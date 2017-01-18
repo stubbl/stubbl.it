@@ -6,4 +6,4 @@ project.lock.json
 .DS_Store
 *.pyc
 .vscode
-**/wwwroot
+**/wwwroot/lib
