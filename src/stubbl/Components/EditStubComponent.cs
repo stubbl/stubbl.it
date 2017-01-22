@@ -9,7 +9,7 @@ namespace stubbl.Components
     {
         public async Task<IViewComponentResult> InvokeAsync(Stub stub)
         {
-            return View(stub);
+            return await Task.FromResult<IViewComponentResult>(View(stub));
         }
     }
 }

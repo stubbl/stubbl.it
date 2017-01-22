@@ -12,10 +12,17 @@ namespace stubbl.Components
     [ViewComponent(Name = "TeamsList")]
     public class TeamsListComponent : ViewComponent
     {
+        private IRetrieveCurrentTeam _retrieveCurrentTeam;
+        private StubblClient _stubblClient;
+
+        public TeamsListComponent(IRetrieveCurrentTeam retrieveCurrentTeam, StubblClient stubblClient)
+        {
+            _retrieveCurrentTeam = retrieveCurrentTeam;
+            _stubblClient = stubblClient;
+        }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var stubblClient = new StubblClient();
-            var teamResponse = await stubblClient.GetTeams();
+            var teamResponse = await _stubblClient.GetTeams();
             if (teamResponse.IsSuccessStatusCode)
             {
                 var teams = JObject.Parse(await teamResponse.Content.ReadAsStringAsync());
@@ -25,9 +32,12 @@ namespace stubbl.Components
                     Name = x.Value<string>("name"),
                     Role = x.Value<string>("role")
                 });
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("CurrentTeam")))
-                    HttpContext.Session.SetString("CurrentTeam", Teams.First().Id);
-                return View(Teams);
+                
+                return View(new TeamListViewModel
+                {
+                    CurrentTeam = Teams.FirstOrDefault(x => x.Id == _retrieveCurrentTeam.GetCurrentTeamId()),
+                    Teams = Teams
+                });
             }
             return View();
         }

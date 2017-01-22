@@ -1,13 +1,14 @@
-﻿@model IEnumerable<stubbl.ViewModels.TeamListItem>
+﻿@using stubbl.ViewModels
+@model  TeamListViewModel
 
 <li>
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-            Team
+            @Model.CurrentTeam.Name
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            @foreach (var team in Model)
+            @foreach (var team in Model.Teams)
             {
                 <li><a asp-area="" asp-controller="Stubs" asp-action="Index" asp-route-Team="@team.Id">@team.Name</a></li>
             }

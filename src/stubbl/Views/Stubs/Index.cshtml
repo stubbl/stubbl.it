@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@using Microsoft.AspNetCore.Mvc
 @using stubbl.Components
 @model stubbl.ViewModels.StubListViewModel
 @{
@@ -17,7 +17,7 @@
         <div id="sidebar-wrapper-right">
             <a href="#menu-toggle" class="btn menu-toggle"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span><b>Team Logs</b></a>
             <ul class="sidebar-nav">
-                @await Component.InvokeAsync("StubLogs", new { team = Model.CurrentTeam })
+                @await Component.InvokeAsync("StubLogs", new { team = Model.CurrentTeamId })
             </ul>
 
         </div>
@@ -67,7 +67,7 @@
         var $logSection = $('.logs-wrapper .logs');
         if ($logSection) {
             setInterval(function() {
-                    $.getJSON("http://stubbl.api.stubbl.it/teams/@(Model.CurrentTeam.Id)/logs",
+                    $.getJSON("http://stubbl.api.stubbl.it/teams/@(Model.CurrentTeamId)/logs",
                         function(res) {
                             res.logs.forEach(function(log) {
                                 $logSection.prepend($("<li>").text(`${new Date(log.timestamp).toLocaleString()} - ${log.method} - ${log.url} - ${log.body}`));

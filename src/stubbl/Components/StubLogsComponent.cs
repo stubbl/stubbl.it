@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using stubbl.ViewModels;
 
 namespace stubbl.Components
@@ -14,7 +9,7 @@ namespace stubbl.Components
     {
         public async Task<IViewComponentResult> InvokeAsync(TeamListItem team)
         {
-            return View(team);
+            return await Task.FromResult<IViewComponentResult>(View(team));
         }
     }
 }

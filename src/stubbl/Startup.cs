@@ -48,6 +48,9 @@ namespace stubbl
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.CookieName = ".stubbl";
             });
+            services.AddSingleton(x => new StubblClient());
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IRetrieveCurrentTeam, RetrieveCurrentTeamFromHttpContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +92,7 @@ namespace stubbl
 
                 Events = new OpenIdConnectEvents()
                 {
-                    OnTicketReceived = async context =>
+                    OnTicketReceived = context =>
                     {
                         // Get the ClaimsIdentity
                         var identity = context.Principal.Identity as ClaimsIdentity;
@@ -113,21 +116,16 @@ namespace stubbl
                                     context.HttpContext.Response.Cookies.Append("id-token",context.Properties.Items[".Token.id_token"]);
                                 }
                             }
-                            var stubblClient = new StubblClient();
-                            var teamResponse = await stubblClient.GetTeams();
-
-                            if (teamResponse.IsSuccessStatusCode)
-                            {
-                                var teams = JObject.Parse(await teamResponse.Content.ReadAsStringAsync());
-                                context.HttpContext.Session.SetString("CurrentTeam", teams.GetValue("teams").First().Value<string>("id"));
-                            }
+                            
                         }
+                        return Task.FromResult(0);
                     }
                 }
             };
             options.Scope.Clear();
             options.Scope.Add("openid");
             app.UseOpenIdConnectAuthentication(options);
+            app.UseMiddleware<TeamsMiddleWare>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

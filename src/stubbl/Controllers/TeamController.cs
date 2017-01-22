@@ -8,6 +8,12 @@ namespace stubbl.Controllers
 {
     public class TeamController:Controller
     {
+        private StubblClient _stubblClient;
+
+        public TeamController(StubblClient stubblClient)
+        {
+            _stubblClient = stubblClient;
+        }
         public IActionResult Create()
         {
             return View();
@@ -15,15 +21,13 @@ namespace stubbl.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(CreateTeamViewModel createTeamViewModel)
         {
-            var stubblClient = new StubblClient();
-
-            var createTeamResponse = await stubblClient.CreateTeam(createTeamViewModel.Name);
-
+            var createTeamResponse = await _stubblClient.CreateTeam(createTeamViewModel.Name);
             if (createTeamResponse.IsSuccessStatusCode)
             {
                 var response = await createTeamResponse.Content.ReadAsStringAsync();
                 var team = JObject.Parse(response);
                 HttpContext.Session.SetString("CurrentTeam", team.Value<string>("teamId"));
+                HttpContext.Session.Remove("NoTeam");
                 return RedirectToAction("Index", "Stubs");
             }
             return View("Create");
