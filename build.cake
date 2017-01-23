@@ -40,14 +40,14 @@ Task("Build")
         MSBuild("./stubbl.it.sln");
     });
 
-/*Task("Test")
+Task("Test")
     .IsDependentOn("Build")
     .Does(() => {
-        DotNetCoreTest("./tests/stubbl.Tests");
-    });*/
+       // DotNetCoreTest("./tests/stubbl.Tests");
+    });
 
 Task("Package")
-    //.IsDependentOn("Test")
+    .IsDependentOn("Test")
     .Does(() => {
         var settings = new DotNetCorePackSettings
         {
