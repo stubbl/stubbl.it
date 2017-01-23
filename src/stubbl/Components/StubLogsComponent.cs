@@ -7,9 +7,9 @@ namespace stubbl.Components
     [ViewComponent(Name = "StubLogs")]
     public class StubLogsComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(TeamListItem team)
+        public async Task<IViewComponentResult> InvokeAsync(string teamId)
         {
-            return await Task.FromResult<IViewComponentResult>(View(team));
+            return await Task.FromResult<IViewComponentResult>(View(teamId));
         }
     }
 }

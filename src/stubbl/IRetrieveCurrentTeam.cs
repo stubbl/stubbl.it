@@ -15,7 +15,7 @@ namespace stubbl
             _httpContextAccessor = contextAccessor;
         }
         public string GetCurrentTeamId() {
-            string currentTeam = _httpContextAccessor?.HttpContext?.Session?.GetString("currentTeam");
+            string currentTeam = _httpContextAccessor?.HttpContext?.Session?.GetString("CurrentTeam");
             if(string.IsNullOrEmpty(currentTeam))
             {
                 throw new CurrentTeamNotSetException();
