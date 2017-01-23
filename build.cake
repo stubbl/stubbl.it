@@ -47,7 +47,7 @@ Task("Build")
     });*/
 
 Task("Package")
-    .IsDependentOn("Test")
+    //.IsDependentOn("Test")
     .Does(() => {
         var settings = new DotNetCorePackSettings
         {
