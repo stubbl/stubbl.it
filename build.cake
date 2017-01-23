@@ -37,7 +37,8 @@ Task("Build")
     .IsDependentOn("Version")
     .IsDependentOn("Restore")
     .Does(() => {
-        MSBuild("./stubbl.it.sln");
+      //  MSBuild("./stubbl.it.sln");
+      DotNetCoreBuild(stublProj);
     });
 
 Task("Test")
@@ -52,7 +53,7 @@ Task("Package")
         var settings = new DotNetCorePackSettings
         {
             OutputDirectory = outputDir,
-            NoBuild = true
+            NoBuild = false
         };
 
         DotNetCorePack(stublProj, settings);
