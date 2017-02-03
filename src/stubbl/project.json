@@ -1,7 +1,10 @@
 {
   "version": "1.0.0-*",
+<<<<<<< HEAD
   "packOptions": {
   },
+=======
+>>>>>>> master
   "dependencies": {
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
